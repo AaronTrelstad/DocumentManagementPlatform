@@ -32,10 +32,10 @@ public class DocumentService {
         this.gridFsTemplate = gridFsTemplate;
     }
 
-    public DocumentModel addDocument(String name, String description, String submitterId, MultipartFile file) throws IOException {
+    public DocumentModel addDocument(String name, String description, String submitterId, MultipartFile file, String folderId) throws IOException {
         var fileId = gridFsTemplate.store(file.getInputStream(), file.getOriginalFilename(), file.getContentType()).toString();
-        DocumentModel documentEntity = new DocumentModel(name, description, submitterId, fileId);
-        return documentRepository.save(documentEntity);
+        DocumentModel documentModel = new DocumentModel(name, description, submitterId, fileId, folderId);
+        return documentRepository.save(documentModel);
     }
 
     public List<DocumentModel> fetchDocuments() throws IOException {

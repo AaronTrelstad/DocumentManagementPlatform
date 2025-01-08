@@ -23,7 +23,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/")
     public ResponseEntity<?> addUser(
         @RequestParam String name, 
         @RequestParam String username,

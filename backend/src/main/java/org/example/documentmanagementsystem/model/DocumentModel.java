@@ -16,14 +16,16 @@ public class DocumentModel {
     private String fileId;
     private LocalDateTime uploadedAt;
     private String fileBase64;
+    private String folderId;
 
-    public DocumentModel(String name, String description, String submitterId, String fileId) {
+    public DocumentModel(String name, String description, String submitterId, String fileId, String folderId) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
         this.submitterId = submitterId;
         this.fileId = fileId;
         this.uploadedAt = LocalDateTime.now();
+        this.folderId = folderId;
     }
 
     public String getId() {
@@ -64,5 +66,13 @@ public class DocumentModel {
 
     public void setFileBase64(String fileBase64) {
         this.fileBase64 = fileBase64;
+    }
+
+    public String getFolderId() {
+        return this.folderId;
+    }
+
+    public void setFolderId(String folderId) {
+        this.folderId = folderId;
     }
 }

@@ -26,15 +26,16 @@ public class DocumentController {
         this.documentService = documentService;
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/")
     public ResponseEntity<?> uploadDocument(
             @RequestParam String name,
             @RequestParam String description,
             @RequestParam String submitterId,
-            @RequestParam MultipartFile file
+            @RequestParam MultipartFile file,
+            @RequestParam String folderId
     ) {
         try {
-            DocumentModel document = documentService.addDocument(name, description, submitterId, file);
+            DocumentModel document = documentService.addDocument(name, description, submitterId, file, folderId);
             return ResponseEntity.ok(document);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
