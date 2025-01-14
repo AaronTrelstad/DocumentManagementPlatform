@@ -1,4 +1,5 @@
 package org.example.documentmanagementsystem.controllers;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,16 +37,16 @@ public class DocumentController {
             @RequestParam String folderId
     ) {
         try {
-            DocumentModel document = documentService.addDocument(name, description, submitterId, file, folderId);
+            DocumentModel document = this.documentService.addDocument(name, description, submitterId, file, folderId);
             return ResponseEntity.ok(document);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<DocumentModel>> getAllDocuments() throws IOException {
-        List<DocumentModel> documents = documentService.fetchDocuments();
+        List<DocumentModel> documents = this.documentService.fetchDocuments();
         if (documents.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -53,12 +55,27 @@ public class DocumentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDocument(@PathVariable String id) {
-        String result = documentService.deleteDocumentById(id);
-        
+        String result = this.documentService.deleteDocumentById(id);
+
         if (result.equals("Document deleted successfully")) {
             return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(404).body(result);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<?> editDocument(
+        @PathVariable String id, 
+        @RequestParam String name, 
+        @RequestParam String description
+    ) {
+        DocumentModel result = this.documentService.editDocument(id, name, description);
+
+        if (result != null) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.status(404).body("Error");
         }
     }
 }

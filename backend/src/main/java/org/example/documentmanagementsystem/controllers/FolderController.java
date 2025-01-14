@@ -27,7 +27,7 @@ public class FolderController {
         @RequestParam List<String> documentIds
     ) {
         try {
-            FolderModel folder = folderService.addFolder(name, description, userIds, documentIds);
+            FolderModel folder = this.folderService.addFolder(name, description, userIds, documentIds);
             return ResponseEntity.ok(folder);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());

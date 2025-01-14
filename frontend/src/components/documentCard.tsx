@@ -13,8 +13,11 @@ import AssistantIcon from "@mui/icons-material/Assistant";
 import AddCommentIcon from "@mui/icons-material/AddComment";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import { Document } from "../types/document";
 import axios from "axios";
+import { useState } from "react";
+import { EditDocumentDialog } from "./editDocument";
 
 export function DocumentCard({
   document,
@@ -23,6 +26,8 @@ export function DocumentCard({
   document: Document;
   onDocumentChange: () => void;
 }) {
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   const handleDelete = async () => {
     try {
       await axios.delete(`http://localhost:8080/api/documents/${document.id}`);
@@ -32,7 +37,7 @@ export function DocumentCard({
     }
   };
 
-  const handleOpenDialog = () => {
+  const openPDFViewer = () => {
     const binary = atob(document.fileBase64);
     const length = binary.length;
     const buffer = new ArrayBuffer(length);
@@ -51,96 +56,120 @@ export function DocumentCard({
     return fileBase64.startsWith("JVBERi0xL");
   };
 
+  const handleEdit = async () => {
+    try {
+      await axios.patch(
+        `http://localhost:8080/api/documents/${document.id}`,
+        {}
+      );
+    } catch (error) {}
+  };
+
   return (
-    <Card sx={{ width: 400, height: 325 }}>
-      <CardHeader title={document.name} />
-
-      {isPDF(document.fileBase64) ? (
-        <CardMedia
-          component="iframe"
-          height="140"
-          src={`data:application/pdf;base64,${document.fileBase64}`}
-          title={`${document.name} PDF`}
+    <>
+      <Card sx={{ width: 400, height: 325 }}>
+        <CardHeader
+          title={document.name}
+          action={
+            <IconButton aria-label="edit" onClick={() => setEditDialogOpen(true)}>
+              <ModeEditIcon />
+            </IconButton>
+          }
         />
-      ) : (
-        <CardMedia
-          component="img"
-          height="140"
-          image={`data:image/jpeg;base64,${document.fileBase64}`}
-          alt={`${document.name} image`}
-        />
-      )}
 
-      <CardContent>
-        <Typography variant="body2" color="text.secondary">
-          {document.description}
-        </Typography>
-      </CardContent>
+        {isPDF(document.fileBase64) ? (
+          <CardMedia
+            component="iframe"
+            height="140"
+            src={`data:application/pdf;base64,${document.fileBase64}`}
+            title={`${document.name} PDF`}
+          />
+        ) : (
+          <CardMedia
+            component="img"
+            height="140"
+            image={`data:image/jpeg;base64,${document.fileBase64}`}
+            alt={`${document.name} image`}
+          />
+        )}
 
-      <CardActions>
-        <IconButton
-          aria-label="like"
-          sx={{
-            "&:hover": {
-              color: "red",
-            },
-          }}
-        >
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton
-          aria-label="comment"
-          sx={{
-            "&:hover": {
-              color: "lightblue",
-            },
-          }}
-        >
-          <AddCommentIcon />
-        </IconButton>
-        <IconButton
-          aria-label="analytics"
-          sx={{
-            "&:hover": {
-              color: "green",
-            },
-          }}
-        >
-          <InsightsIcon />
-        </IconButton>
-        <IconButton
-          aria-label="assistant"
-          sx={{
-            "&:hover": {
-              color: "purple",
-            },
-          }}
-        >
-          <AssistantIcon />
-        </IconButton>
-        <IconButton
-          aria-label="delete"
-          onClick={handleDelete}
-          sx={{
-            "&:hover": {
-              color: "black",
-            },
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-        <IconButton
-          aria-label="view"
-          onClick={handleOpenDialog}
-          sx={{
-            "&:hover": {
-              color: "blue",
-            },
-          }}
-        >
-          <RemoveRedEyeIcon />
-        </IconButton>
-      </CardActions>
-    </Card>
+        <CardContent>
+          <Typography variant="body2" color="text.secondary">
+            {document.description}
+          </Typography>
+        </CardContent>
+
+        <CardActions>
+          <IconButton
+            aria-label="like"
+            sx={{
+              "&:hover": {
+                color: "red",
+              },
+            }}
+          >
+            <FavoriteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="comment"
+            sx={{
+              "&:hover": {
+                color: "lightblue",
+              },
+            }}
+          >
+            <AddCommentIcon />
+          </IconButton>
+          <IconButton
+            aria-label="analytics"
+            sx={{
+              "&:hover": {
+                color: "green",
+              },
+            }}
+          >
+            <InsightsIcon />
+          </IconButton>
+          <IconButton
+            aria-label="assistant"
+            sx={{
+              "&:hover": {
+                color: "purple",
+              },
+            }}
+          >
+            <AssistantIcon />
+          </IconButton>
+          <IconButton
+            aria-label="delete"
+            onClick={handleDelete}
+            sx={{
+              "&:hover": {
+                color: "black",
+              },
+            }}
+          >
+            <DeleteIcon />
+          </IconButton>
+          <IconButton
+            aria-label="view"
+            onClick={openPDFViewer}
+            sx={{
+              "&:hover": {
+                color: "blue",
+              },
+            }}
+          >
+            <RemoveRedEyeIcon />
+          </IconButton>
+        </CardActions>
+      </Card>
+      <EditDocumentDialog
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        document={document}
+        onDocumentUpdate={onDocumentChange}
+      />
+    </>
   );
 }

@@ -17,6 +17,7 @@ import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.NameList;
 
 import com.mongodb.client.gridfs.model.GridFSFile;
 
@@ -76,4 +77,18 @@ public class DocumentService {
             return "No document found with the given ID";
         }
     }
+
+    public DocumentModel editDocument(String id, String name, String description) {
+        Optional<DocumentModel> optionalDocument = documentRepository.findById(id);
+    
+        if (optionalDocument.isPresent()) {
+            DocumentModel document = optionalDocument.get();
+            document.setName(name); 
+            document.setDescription(description); 
+            return documentRepository.save(document);
+        } else {
+            return null;
+        }
+    }
+    
 }

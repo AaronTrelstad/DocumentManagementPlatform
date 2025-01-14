@@ -13,12 +13,21 @@ import {
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { logout } from "../slices/auth";
 
 export function Header() {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const isAuth = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
 
   const toggleDrawer = (open: boolean) => {
     setDrawerOpen(open);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   return (
@@ -35,9 +44,26 @@ export function Header() {
           <MenuIcon />
         </IconButton>
 
-        <Button color="inherit" to="/" component={Link} sx={{ flexGrow: 1 }}>
-          Document Manager
-        </Button>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Button
+            color="inherit"
+            to="/"
+            component={Link}
+            sx={{ textTransform: "none", fontSize: "1.25rem" }}
+          >
+            Document Manager
+          </Button>
+        </Typography>
+
+        {isAuth ? (
+          <Button color="inherit" to="/login" component={Link}>
+            Login
+          </Button>
+        ) : (
+          <Button color="inherit" onClick={handleLogout}>
+            Logout
+          </Button>
+        )}
       </Toolbar>
 
       <Drawer

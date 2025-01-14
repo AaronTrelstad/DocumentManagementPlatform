@@ -52,10 +52,13 @@ import {
       data.append("description", formData.description);
       data.append("submitterId", formData.submitterId);
       data.append("file", formData.file);
+      data.append("folderId", "1")
+
+      console.log(data)
   
       try {
         const response = await axios.post(
-          "http://localhost:8080/api/documents/upload",
+          "http://localhost:8080/api/documents/",
           data,
           {
             headers: {

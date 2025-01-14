@@ -12,7 +12,7 @@ export function Dashboard() {
 
   const fetchDocuments = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/documents"); 
+      const response = await axios.get("http://localhost:8080/api/documents/"); 
       setDocuments(response.data);
     } catch (error) {
       console.error("Error fetching documents:", error);

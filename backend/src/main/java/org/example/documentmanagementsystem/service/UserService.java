@@ -17,11 +17,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserModel addUser(String name, String username, String password, String email) {
-        UserModel user = new UserModel(name, username, password, email);
-        return userRepository.save(user);
-    }
-
     public UserModel updateUser(String id, UserModel updatedUser) { 
         Optional<UserModel> user = userRepository.findById(id);
 
