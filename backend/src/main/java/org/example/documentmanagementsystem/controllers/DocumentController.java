@@ -34,10 +34,11 @@ public class DocumentController {
             @RequestParam String description,
             @RequestParam String submitterId,
             @RequestParam MultipartFile file,
-            @RequestParam String folderId
+            @RequestParam String folderId,
+            @RequestParam int likes
     ) {
         try {
-            DocumentModel document = this.documentService.addDocument(name, description, submitterId, file, folderId);
+            DocumentModel document = this.documentService.addDocument(name, description, submitterId, file, folderId, likes);
             return ResponseEntity.ok(document);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
@@ -70,10 +71,51 @@ public class DocumentController {
         @RequestParam String name, 
         @RequestParam String description
     ) {
-        DocumentModel result = this.documentService.editDocument(id, name, description);
+        DocumentModel document = this.documentService.editDocument(id, name, description);
 
-        if (result != null) {
-            return ResponseEntity.ok(result);
+        if (document != null) {
+            return ResponseEntity.ok(document);
+        } else {
+            return ResponseEntity.status(404).body("Error");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getDocument(
+        @PathVariable String id
+    ) {
+        DocumentModel document = this.documentService.getDocument(id);
+
+        if (document != null) {
+            return ResponseEntity.ok(document);
+        } else {
+            return ResponseEntity.status(404).body("Error");
+        }
+    }
+
+    @PatchMapping("/{id}/like")
+    public ResponseEntity<?> likeDocument(
+        @PathVariable String id
+    ) {
+        DocumentModel document = this.documentService.likeDocument(id);
+
+        if (document != null) {
+            return ResponseEntity.ok(document);
+        } else {
+            return ResponseEntity.status(404).body("Error");
+        }
+    }
+
+    @PatchMapping("/{id}/comment")
+    public ResponseEntity<?> addComment(
+        @PathVariable String id,
+        @RequestParam String commenterId,
+        @RequestParam String message
+    ) {
+        DocumentModel document = this.documentService.addComment(id, commenterId, message);
+
+        if (document != null) {
+            return ResponseEntity.ok(document);
         } else {
             return ResponseEntity.status(404).body("Error");
         }

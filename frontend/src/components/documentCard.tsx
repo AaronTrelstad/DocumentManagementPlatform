@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   CardActions,
   CardContent,
@@ -18,6 +19,7 @@ import { Document } from "../types/document";
 import axios from "axios";
 import { useState } from "react";
 import { EditDocumentDialog } from "./editDocument";
+import { CommentDocument } from "./commentDocument";
 
 export function DocumentCard({
   document,
@@ -27,6 +29,7 @@ export function DocumentCard({
   onDocumentChange: () => void;
 }) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [commentDialogOpen, setCommentDialogOpen] = useState(false);
 
   const handleDelete = async () => {
     try {
@@ -56,18 +59,18 @@ export function DocumentCard({
     return fileBase64.startsWith("JVBERi0xL");
   };
 
-  const handleEdit = async () => {
+  const handleLike = async () => {
     try {
-      await axios.patch(
-        `http://localhost:8080/api/documents/${document.id}`,
-        {}
-      );
-    } catch (error) {}
-  };
+      await axios.patch(`http://localhost:8080/api/documents/${document.id}/like`)
+      onDocumentChange();
+    } catch(error) {
+      console.error(error)
+    }
+  }
 
   return (
     <>
-      <Card sx={{ width: 400, height: 325 }}>
+      <Card sx={{ width: 400, height: 400, display: "flex", flexDirection: "column" }}>
         <CardHeader
           title={document.name}
           action={
@@ -102,6 +105,7 @@ export function DocumentCard({
         <CardActions>
           <IconButton
             aria-label="like"
+            onClick={handleLike}
             sx={{
               "&:hover": {
                 color: "red",
@@ -109,9 +113,11 @@ export function DocumentCard({
             }}
           >
             <FavoriteIcon />
+            <Typography>{document.likes}</Typography>
           </IconButton>
           <IconButton
             aria-label="comment"
+            onClick={() => setCommentDialogOpen(true)}
             sx={{
               "&:hover": {
                 color: "lightblue",
@@ -163,10 +169,38 @@ export function DocumentCard({
             <RemoveRedEyeIcon />
           </IconButton>
         </CardActions>
+
+        <Box
+          sx={{
+            maxHeight: "100px",
+            overflowY: "auto",
+            padding: "8px",
+            borderTop: "1px solid #ddd",
+            margin: "0 16px",
+          }}
+        >
+          {document.comments.length > 0 ? (
+            document.comments.map((comment, index) => (
+              <Typography key={index} variant="body2" sx={{ marginBottom: "4px" }}>
+                <strong>{comment.commenterId || "Anonymous"}:</strong> {comment.message}
+              </Typography>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No comments yet.
+            </Typography>
+          )}
+        </Box>
       </Card>
       <EditDocumentDialog
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
+        document={document}
+        onDocumentUpdate={onDocumentChange}
+      />
+      <CommentDocument
+        open={commentDialogOpen}
+        onClose={() => setCommentDialogOpen(false)}
         document={document}
         onDocumentUpdate={onDocumentChange}
       />

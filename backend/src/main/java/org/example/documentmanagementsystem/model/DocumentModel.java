@@ -1,6 +1,8 @@
 package org.example.documentmanagementsystem.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -17,8 +19,10 @@ public class DocumentModel {
     private LocalDateTime uploadedAt;
     private String fileBase64;
     private String folderId;
+    private int likes;
+    private List<CommentModel> comments;
 
-    public DocumentModel(String name, String description, String submitterId, String fileId, String folderId) {
+    public DocumentModel(String name, String description, String submitterId, String fileId, String folderId, int likes) {
         this.id = UUID.randomUUID().toString();
         this.name = name;
         this.description = description;
@@ -26,6 +30,8 @@ public class DocumentModel {
         this.fileId = fileId;
         this.uploadedAt = LocalDateTime.now();
         this.folderId = folderId;
+        this.likes = likes;
+        this.comments = new ArrayList<>();
     }
 
     public String getId() {
@@ -74,5 +80,21 @@ public class DocumentModel {
 
     public void setFolderId(String folderId) {
         this.folderId = folderId;
+    }
+
+    public int getLikes() {
+        return this.likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    } 
+
+    public List<CommentModel> getComments() {
+        return this.comments;
+    }
+
+    public void setComments(List<CommentModel> comments) {
+        this.comments = comments;
     }
 }

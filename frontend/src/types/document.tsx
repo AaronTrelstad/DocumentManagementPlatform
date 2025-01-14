@@ -6,6 +6,8 @@ export interface Document {
     fileId: string,
     fileBase64: string,
     folderId: string,
+    likes: number,
+    comments: Comment[]
 }
 
 export interface User {
@@ -14,4 +16,9 @@ export interface User {
     email: string,
     password: string,
     role: string,
+}
+
+export interface Comment {
+    commenterId: string,
+    message: string
 }

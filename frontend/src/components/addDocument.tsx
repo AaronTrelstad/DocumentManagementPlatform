@@ -20,6 +20,9 @@ import {
       description: "",
       file: null as File | null,
       submitterId: "12345", 
+      folderId: "",
+      likes: 0,
+      comments: []
     });
   
     const handleDialogOpen = () => {
@@ -52,9 +55,9 @@ import {
       data.append("description", formData.description);
       data.append("submitterId", formData.submitterId);
       data.append("file", formData.file);
-      data.append("folderId", "1")
-
-      console.log(data)
+      data.append("folderId", "");
+      data.append("likes", "1");
+      data.append("comments", "[]")
   
       try {
         const response = await axios.post(
