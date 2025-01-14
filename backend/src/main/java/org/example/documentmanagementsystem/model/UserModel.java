@@ -14,6 +14,8 @@ public class UserModel {
     private String name;
     private String email;
     private String role;
+    private String bio;
+    private String title;
     
     public UserModel(String name, String username, String password, String email, String role) {
         this.id = UUID.randomUUID().toString();
@@ -22,6 +24,8 @@ public class UserModel {
         this.password = password;
         this.email = email;
         this.role = role;
+        this.title = "";
+        this.bio = "";
     }
 
     public String getId() {
@@ -66,5 +70,21 @@ public class UserModel {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getBio() {
+        return this.bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
