@@ -26,6 +26,10 @@ public class FolderModel {
         this.uploadedAt = LocalDateTime.now();
     }
 
+    public String getId() {
+        return this.id;
+    }
+
     public String getName() {
         return this.name;
     }
@@ -72,5 +76,9 @@ public class FolderModel {
 
     public void removeDocumentId(String documentId) {
         this.documentIds.remove(documentId);
+    }
+
+    public LocalDateTime getUploadedAt() {
+        return this.uploadedAt;
     }
 }

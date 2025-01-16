@@ -115,6 +115,19 @@ public class DocumentService {
         }
     }
 
+    public DocumentModel viewDocument(String id) {
+        Optional<DocumentModel> optionalDocument = this.documentRepository.findById(id);
+
+        if (optionalDocument.isPresent()) {
+            DocumentModel document = optionalDocument.get();
+            int currentViews = document.getViews();
+            document.setViews(currentViews + 1);
+            return this.documentRepository.save(document);
+        } else {
+            return null;
+        }
+    }
+
     public DocumentModel addComment(String id, String commenterId, String message) {
         Optional<DocumentModel> optionalDocument = this.documentRepository.findById(id);
 

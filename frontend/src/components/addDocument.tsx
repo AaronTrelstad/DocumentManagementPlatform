@@ -22,6 +22,7 @@ import {
       submitterId: "12345", 
       folderId: "",
       likes: 0,
+      views: 0,
       comments: []
     });
   
@@ -56,7 +57,8 @@ import {
       data.append("submitterId", formData.submitterId);
       data.append("file", formData.file);
       data.append("folderId", "");
-      data.append("likes", "1");
+      data.append("likes", "0");
+      data.append("views", "0")
       data.append("comments", "[]")
   
       try {

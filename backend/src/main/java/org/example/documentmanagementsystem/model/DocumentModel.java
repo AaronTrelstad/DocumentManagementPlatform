@@ -20,6 +20,7 @@ public class DocumentModel {
     private String fileBase64;
     private String folderId;
     private int likes;
+    private int views;
     private List<CommentModel> comments;
 
     public DocumentModel(String name, String description, String submitterId, String fileId, String folderId, int likes) {
@@ -31,6 +32,7 @@ public class DocumentModel {
         this.uploadedAt = LocalDateTime.now();
         this.folderId = folderId;
         this.likes = likes;
+        this.views = views;
         this.comments = new ArrayList<>();
     }
 
@@ -89,6 +91,14 @@ public class DocumentModel {
     public void setLikes(int likes) {
         this.likes = likes;
     } 
+
+    public int getViews() {
+        return this.views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
 
     public List<CommentModel> getComments() {
         return this.comments;

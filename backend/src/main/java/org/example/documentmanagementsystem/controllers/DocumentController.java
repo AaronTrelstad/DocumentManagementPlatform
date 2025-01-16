@@ -106,6 +106,20 @@ public class DocumentController {
         }
     }
 
+    @PatchMapping("/{id}/view")
+    public ResponseEntity<?> viewDocument(
+        @PathVariable String id
+    ) {
+        System.out.println("Adding the views.");
+        DocumentModel document = this.documentService.viewDocument(id);
+
+        if (document != null) {
+            return ResponseEntity.ok(document);
+        } else {
+            return ResponseEntity.status(404).body("Error");
+        }
+    }
+
     @PatchMapping("/{id}/comment")
     public ResponseEntity<?> addComment(
         @PathVariable String id,

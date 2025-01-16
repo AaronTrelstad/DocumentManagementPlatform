@@ -40,7 +40,9 @@ export function DocumentCard({
     }
   };
 
-  const openPDFViewer = () => {
+  const openPDFViewer = async () => {
+    await handleView();
+
     const binary = atob(document.fileBase64);
     const length = binary.length;
     const buffer = new ArrayBuffer(length);
@@ -68,6 +70,25 @@ export function DocumentCard({
     }
   }
 
+  const handleView = async () => {
+    try {
+      await axios.patch(`http://localhost:8080/api/documents/${document.id}/view`)
+      onDocumentChange();
+    } catch(error) {
+      console.error(error);
+    }
+  }
+
+  const formatDate = (oldDate: string) => {
+    console.log(oldDate)
+    const date = new Date(oldDate); 
+    const month = date.getMonth() + 1; 
+    const day = date.getDate();
+    const year = date.getFullYear();
+  
+    return `${month}/${day}/${year}`;
+  };
+
   return (
     <>
       <Card sx={{ width: 400, height: 400, display: "flex", flexDirection: "column" }}>
@@ -78,6 +99,7 @@ export function DocumentCard({
               <ModeEditIcon />
             </IconButton>
           }
+          subheader={formatDate(document.uploadedAt)}
         />
 
         {isPDF(document.fileBase64) ? (
@@ -167,6 +189,7 @@ export function DocumentCard({
             }}
           >
             <RemoveRedEyeIcon />
+            <Typography>{document.views}</Typography>
           </IconButton>
         </CardActions>
 
