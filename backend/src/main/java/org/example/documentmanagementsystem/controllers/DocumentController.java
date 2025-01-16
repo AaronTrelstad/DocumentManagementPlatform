@@ -134,4 +134,16 @@ public class DocumentController {
             return ResponseEntity.status(404).body("Error");
         }
     }
+
+    @GetMapping("/{id}/documents")
+    public ResponseEntity<?> getDocumentsBySubmitterId(
+        @PathVariable String id
+    ) throws IOException {
+        List<DocumentModel> documents = this.documentService.getDocumentsBySubmitterId(id);
+
+        if (documents.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(documents);
+    }
 }

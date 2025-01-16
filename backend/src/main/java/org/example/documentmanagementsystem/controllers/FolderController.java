@@ -33,8 +33,4 @@ public class FolderController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-
-    
-
-
 }

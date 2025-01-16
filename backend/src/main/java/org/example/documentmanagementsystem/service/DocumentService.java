@@ -145,4 +145,33 @@ public class DocumentService {
             return null;
         }
     }
+
+    public List<DocumentModel> getDocumentsBySubmitterId(String id) throws IOException {
+        List<DocumentModel> documents = this.documentRepository.findBySubmitterId(id);
+
+        for (DocumentModel document : documents) {
+            ObjectId fileId = new ObjectId(document.getFileId());
+
+            Query query = new Query(Criteria.where("_id").is(fileId));
+
+            GridFSFile gridFSFile = this.gridFsTemplate.find(query).first();
+
+            if (gridFSFile != null) {
+                GridFsResource resource = this.gridFsTemplate.getResource(gridFSFile);
+
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                try {
+                    IOUtils.copy(resource.getInputStream(), outputStream);
+                    byte[] fileBytes = outputStream.toByteArray();
+
+                    String base64File = Base64.getEncoder().encodeToString(fileBytes);
+                    document.setFileBase64(base64File);
+                } finally {
+                    outputStream.close();
+                }
+            }
+        }
+
+        return documents;
+    }
 }
